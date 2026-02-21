@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AlgoX — Algo Trading Platform</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0f1a;color:#e8f0fe;font-family:Arial,sans-serif}
+nav{background:#0d1426;border-bottom:1px solid #1a3a5c;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
+.logo{font-size:22px;font-weight:900;color:#fff}.logo span{color:#00e5a0}
+.nbtn{background:#00e5a0;color:#000;padding:8px 18px;font-weight:700;font-size:13px;border:none;border-radius:4px;cursor:pointer}
+.hero{padding:60px 20px 40px;text-align:center;background:linear-gradient(180deg,#0d1426 0%,#0a0f1a 100%)}
+.htag{display:inline-flex;align-items:center;gap:8px;background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.3);color:#00e5a0;padding:6px 14px;border-radius:20px;font-size:12px;margin-bottom:24px}
+.dot{width:8px;height:8px;background:#00e5a0;border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+.hero h1{font-size:38px;font-weight:900;line-height:1.1;margin-bottom:16px;color:#fff}
+.hero h1 span{color:#00e5a0}
+.hero p{font-size:15px;color:#8899aa;line-height:1.7;margin-bottom:32px;max-width:500px;margin-left:auto;margin-right:auto}
+.hbtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-g{background:#00e5a0;color:#000;padding:14px 28px;font-weight:700;font-size:14px;border:none;border-radius:6px;cursor:pointer}
+.btn-w{background:transparent;color:#fff;padding:14px 28px;font-weight:700;font-size:14px;border:2px solid rgba(255,255,255,0.2);border-radius:6px;cursor:pointer}
+.ticker{background:#060c18;border-top:1px solid #1a3a5c;border-bottom:1px solid #1a3a5c;padding:10px 0;overflow:hidden}
+.tick-inner{display:flex;gap:40px;animation:scroll 18s linear infinite;white-space:nowrap}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ti{display:flex;gap:8px;align-items:center;font-size:12px}
+.ti .s{color:#556677}.ti .p{color:#e8f0fe;font-weight:600}
+.up{color:#00e5a0}.dn{color:#ff4455}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#1a3a5c;margin:0}
+.stat{background:#0d1426;padding:24px 20px;text-align:center}
+.snum{font-size:28px;font-weight:900;color:#00e5a0;font-family:'Arial Black',Arial}
+.slbl{font-size:11px;color:#556677;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.sec{padding:50px 20px}
+.sec.dark{background:#060c18}
+.sec-tag{font-size:11px;color:#00e5a0;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+.sec h2{font-size:28px;font-weight:900;color:#fff;margin-bottom:28px;line-height:1.2}
+.steps{display:flex;flex-direction:column;gap:12px}
+.step{background:#0d1426;border:1px solid #1a3a5c;border-left:3px solid #00e5a0;padding:20px;border-radius:4px}
+.step-num{font-size:11px;color:#00e5a0;letter-spacing:2px;margin-bottom:6px}
+.step-t{font-size:16px;font-weight:700;color:#fff;margin-bottom:6px}
+.step-d{font-size:13px;color:#8899aa;line-height:1.6}
+.strat-cards{display:flex;flex-direction:column;gap:12px}
+.sc{background:#0d1426;border:1px solid #1a3a5c;padding:22px;border-radius:4px}
+.sc:hover{border-color:#00e5a0}
+.risk{display:inline-block;font-size:10px;letter-spacing:1px;padding:3px 8px;border-radius:2px;margin-bottom:12px;font-weight:700}
+.rl{background:rgba(0,229,160,0.15);color:#00e5a0}
+.rm{background:rgba(255,183,0,0.15);color:#ffb700}
+.rh{background:rgba(255,68,85,0.15);color:#ff4455}
+.sc-n{font-size:18px;font-weight:800;color:#fff;margin-bottom:6px}
+.sc-d{font-size:12px;color:#8899aa;line-height:1.6;margin-bottom:14px}
+.sc-stats{display:flex;gap:16px}
+.sv{font-size:18px;font-weight:800;color:#00e5a0}
+.sl2{font-size:10px;color:#556677;margin-top:2px}
+.terminal{background:#020810;border:1px solid #1a3a5c;border-radius:4px;overflow:hidden;margin-top:28px}
+.term-h{background:#0d1426;border-bottom:1px solid #1a3a5c;padding:10px 16px;display:flex;align-items:center;gap:6px}
+.td{width:10px;height:10px;border-radius:50%}
+.term-b{padding:16px;font-size:12px;font-family:'Courier New',monospace;line-height:1.9;min-height:240px;overflow-y:auto}
+.tl{display:flex;gap:10px}
+.tt{color:#556677;min-width:68px}
+.tp{min-width:58px;font-weight:700}
+.tbuy{color:#00e5a0}.tsell{color:#ff4455}.tinfo{color:#00ccff}
+.tm{color:rgba(232,240,254,0.65)}
+.blink{animation:bl 1s step-end infinite}
+@keyframes bl{50%{opacity:0}}
+.price-cards{display:flex;flex-direction:column;gap:12px}
+.pc{background:#0d1426;border:1px solid #1a3a5c;padding:28px;border-radius:4px;position:relative}
+.pc.hot{border-color:#00e5a0;background:rgba(0,229,160,0.04)}
+.hot-tag{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#00e5a0;color:#000;font-size:10px;font-weight:800;padding:3px 14px;border-radius:2px;letter-spacing:1px;white-space:nowrap}
+.pname{font-size:12px;font-weight:700;color:#8899aa;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.price{font-size:42px;font-weight:900;color:#fff;line-height:1}
+.price sup{font-size:18px;color:#8899aa;vertical-align:super}
+.pcycle{font-size:11px;color:#556677;margin-bottom:20px;margin-top:4px}
+.feats{list-style:none;margin-bottom:24px}
+.feats li{font-size:13px;color:rgba(232,240,254,0.7);padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;gap:8px}
+.feats li::before{content:'✓';color:#00e5a0;font-weight:700}
+.pbtn{width:100%;padding:13px;font-weight:700;font-size:13px;border:2px solid #00e5a0;background:transparent;color:#00e5a0;border-radius:4px;cursor:pointer}
+.pc.hot .pbtn{background:#00e5a0;color:#000}
+.brokers{display:flex;flex-wrap:wrap;gap:16px;margin-top:20px}
+.brok{background:#0d1426;border:1px solid #1a3a5c;padding:10px 16px;font-size:13px;font-weight:700;color:#8899aa;border-radius:4px}
+.testi{display:flex;flex-direction:column;gap:12px}
+.tc{background:#0d1426;border:1px solid #1a3a5c;padding:22px;border-radius:4px}
+.tq{font-size:14px;color:rgba(232,240,254,0.85);line-height:1.6;margin-bottom:16px;font-style:italic}
+.ta{display:flex;align-items:center;gap:10px}
+.av{width:36px;height:36px;background:linear-gradient(135deg,#00e5a0,#00ccff);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#000;font-size:13px;flex-shrink:0}
+.an{font-size:13px;font-weight:700;color:#fff}
+.am{font-size:11px;color:#556677}
+.tres{margin-top:12px;background:rgba(0,229,160,0.08);border-left:3px solid #00e5a0;padding:10px 14px;font-size:12px;color:#8899aa;border-radius:0 4px 4px 0}
+.tres span{color:#00e5a0;font-weight:700}
+.sec-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sg{background:#0d1426;border:1px solid #1a3a5c;padding:20px;border-radius:4px;text-align:center}
+.sgi{font-size:30px;margin-bottom:10px}
+.sgt{font-size:14px;font-weight:700;color:#fff;margin-bottom:6px}
+.sgd{font-size:12px;color:#8899aa;line-height:1.5}
+.faq-list{display:flex;flex-direction:column}
+.fi{border-bottom:1px solid #1a3a5c}
+.fq{padding:16px 0;font-size:14px;font-weight:700;color:#fff;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.ft{width:24px;height:24px;background:#1a3a5c;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:16px;flex-shrink:0;color:#00e5a0}
+.fa{font-size:13px;color:#8899aa;line-height:1.7;padding-bottom:16px;display:none}
+.fi.open .fa{display:block}
+.fi.open .fq{color:#00e5a0}
+.fi.open .ft{background:#00e5a0;color:#000}
+.cta-sec{background:linear-gradient(135deg,rgba(0,229,160,0.08),rgba(0,204,255,0.05));border-top:1px solid rgba(0,229,160,0.2);padding:60px 20px;text-align:center}
+.cta-sec h2{font-size:30px;font-weight:900;color:#fff;margin-bottom:14px}
+.cta-sec p{font-size:14px;color:#8899aa;margin-bottom:28px;line-height:1.6}
+footer{background:#060c18;border-top:1px solid #1a3a5c;padding:32px 20px}
+.foot-logo{font-size:20px;font-weight:900;color:#fff;margin-bottom:8px}
+.foot-logo span{color:#00e5a0}
+.foot-p{font-size:12px;color:#556677;line-height:1.6;margin-bottom:20px}
+.foot-links{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:20px}
+.foot-links a{font-size:12px;color:#8899aa;text-decoration:none}
+.foot-disc{font-size:10px;color:#3a4a5a;line-height:1.6;border-top:1px solid #1a3a5c;padding-top:16px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Algo<span>X</span></div>
+  <button class="nbtn">Start Free Trial</button>
+</nav>
+
+<div class="hero">
+  <div class="htag"><div class="dot"></div>Live Algo Trading Platform</div>
+  <h1>Trade Smarter.<br><span>Not Harder.</span></h1>
+  <p>AlgoX connects to your demat account and executes institutional-grade algorithmic strategies automatically — while you sleep, work, or do anything else.</p>
+  <div class="hbtns">
+    <button class="btn-g">Start Trading Free →</button>
+    <button class="btn-w">Watch Demo</button>
+  </div>
+</div>
+
+<div class="ticker">
+  <div class="tick-inner">
+    <div class="ti"><span class="s">NIFTY50</span><span class="p">22,147</span><span class="up">▲+0.84%</span></div>
+    <div class="ti"><span class="s">BANKNIFTY</span><span class="p">47,832</span><span class="up">▲+1.12%</span></div>
+    <div class="ti"><span class="s">RELIANCE</span><span class="p">2,891</span><span class="dn">▼-0.23%</span></div>
+    <div class="ti"><span class="s">TCS</span><span class="p">3,742</span><span class="up">▲+0.56%</span></div>
+    <div class="ti"><span class="s">INFY</span><span class="p">1,534</span><span class="dn">▼-0.41%</span></div>
+    <div class="ti"><span class="s">HDFC</span><span class="p">1,687</span><span class="up">▲+0.73%</span></div>
+    <div class="ti"><span class="s">SENSEX</span><span class="p">73,248</span><span class="up">▲+0.67%</span></div>
+    <div class="ti"><span class="s">NIFTY50</span><span class="p">22,147</span><span class="up">▲+0.84%</span></div>
+    <div class="ti"><span class="s">BANKNIFTY</span><span class="p">47,832</span><span class="up">▲+1.12%</span></div>
+    <div class="ti"><span class="s">RELIANCE</span><span class="p">2,891</span><span class="dn">▼-0.23%</span></div>
+    <div class="ti"><span class="s">TCS</span><span class="p">3,742</span><span class="up">▲+0.56%</span></div>
+    <div class="ti"><span class="s">SENSEX</span><span class="p">73,248</span><span class="up">▲+0.67%</span></div>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="snum">₹84Cr+</div><div class="slbl">Volume Traded</div></div>
+  <div class="stat"><div class="snum">2,400+</div><div class="slbl">Active Traders</div></div>
+  <div class="stat"><div class="snum">94.2%</div><div class="slbl">Uptime</div></div>
+  <div class="stat"><div class="snum">32ms</div><div class="slbl">Execution Speed</div></div>
+</div>
+
+<div class="sec" id="how">
+  <div class="sec-tag">How It Works</div>
+  <h2>5 Steps to Automated Profit</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">STEP 01</div><div class="step-t">🔐 Sign Up & Pay</div><div class="step-d">Create your account and choose a plan. Instant activation via Razorpay. GST invoice auto-generated.</div></div>
+    <div class="step"><div class="step-num">STEP 02</div><div class="step-t">📋 Quick KYC</div><div class="step-d">Upload PAN + Aadhaar. Verified in minutes. SEBI-compliant onboarding with full data encryption.</div></div>
+    <div class="step"><div class="step-num">STEP 03</div><div class="step-t">🔗 Link Your Demat</div><div class="step-d">Connect Angel One, Zerodha, Upstox or 10+ brokers. One-click API authorization. Read-only safe access.</div></div>
+    <div class="step"><div class="step-num">STEP 04</div><div class="step-t">⚡ Pick a Strategy</div><div class="step-d">Choose from 5+ backtested strategies. Set your risk level, capital allocation, and stop-loss preferences.</div></div>
+    <div class="step"><div class="step-num">STEP 05</div><div class="step-t">🤖 Algo Trades for You!</div><div class="step-d">AlgoX handles everything. Real-time signals, instant execution, automated risk management. You just watch profits.</div></div>
+  </div>
+</div>
+
+<div class="sec dark" id="strategies">
+  <div class="sec-tag">Strategies</div>
+  <h2>Battle-Tested Algorithms</h2>
+  <div class="strat-cards">
+    <div class="sc"><span class="risk rl">LOW RISK</span><div class="sc-n">Nifty Momentum Pro</div><div class="sc-d">Captures directional momentum in Nifty50 using multi-timeframe signals with dynamic position sizing.</div><div class="sc-stats"><div><div class="sv">+34.7%</div><div class="sl2">Annual Return</div></div><div><div class="sv">68%</div><div class="sl2">Win Rate</div></div><div><div class="sv">1.8</div><div class="sl2">Sharpe</div></div></div></div>
+    <div class="sc"><span class="risk rm">MED RISK</span><div class="sc-n">BankNifty Shield</div><div class="sc-d">Premium collection on BankNifty weekly options. Consistent income through volatility decay and theta harvesting.</div><div class="sc-stats"><div><div class="sv">+52.3%</div><div class="sl2">Annual Return</div></div><div><div class="sv">74%</div><div class="sl2">Win Rate</div></div><div><div class="sv">2.1</div><div class="sl2">Sharpe</div></div></div></div>
+    <div class="sc"><span class="risk rl">LOW RISK</span><div class="sc-n">Mean Reversion X</div><div class="sc-d">Exploits statistical mean reversion in large-cap equities with tight risk control and systematic exits.</div><div class="sc-stats"><div><div class="sv">+28.1%</div><div class="sl2">Annual Return</div></div><div><div class="sv">71%</div><div class="sl2">Win Rate</div></div><div><div class="sv">1.6</div><div class="sl2">Sharpe</div></div></div></div>
+    <div class="sc"><span class="risk rh">HIGH RISK</span><div class="sc-n">Breakout Hunter</div><div class="sc-d">Aggressive breakout strategy targeting high-volatility F&O moves. Asymmetric returns with defined risk.</div><div class="sc-stats"><div><div class="sv">+89.4%</div><div class="sl2">Annual Return</div></div><div><div class="sv">54%</div><div class="sl2">Win Rate</div></div><div><div class="sv">1.3</div><div class="sl2">Sharpe</div></div></div></div>
+    <div class="sc"><span class="risk rm">MED RISK</span><div class="sc-n">Iron Condor Auto</div><div class="sc-d">Automated iron condor on weekly expiry. Profits in range-bound markets with defined risk on both sides.</div><div class="sc-stats"><div><div class="sv">+41.8%</div><div class="sl2">Annual Return</div></div><div><div class="sv">79%</div><div class="sl2">Win Rate</div></div><div><div class="sv">2.4</div><div class="sl2">Sharpe</div></div></div></div>
+  </div>
+  <div class="terminal">
+    <div class="term-h">
+      <div class="td" style="background:#ff4455"></div>
+      <div class="td" style="background:#ffb700"></div>
+      <div class="td" style="background:#00e5a0"></div>
+      <span style="margin-left:10px;font-size:11px;color:#556677;font-family:'Courier New',monospace">algox_engine.live</span>
+      <span style="margin-left:auto;font-size:11px;color:#00e5a0">● LIVE</span>
+    </div>
+    <div class="term-b" id="terminal">
+      <div class="tl"><span class="tt">09:15:02</span><span class="tp tinfo">SYSTEM</span><span class="tm">Market open. Scanning signals...</span></div>
+      <div class="tl"><span class="tt">09:15:08</span><span class="tp tinfo">SIGNAL</span><span class="tm">NIFTY momentum → LONG detected</span></div>
+      <div class="tl"><span class="tt">09:15:09</span><span class="tp tbuy">BUY</span><span class="tm">NIFTY22200CE → 1 lot @ ₹142.50</span></div>
+      <div class="tl"><span class="tt">09:15:09</span><span class="tp tinfo">RISK</span><span class="tm">SL: ₹128 | Target: ₹178</span></div>
+      <div class="tl"><span class="tt">09:28:44</span><span class="tp tinfo">UPDATE</span><span class="tm">MTM: +₹1,840 ✓</span></div>
+      <div class="tl"><span class="tt">10:15:33</span><span class="tp tsell">EXIT</span><span class="tm">Closed @ ₹176.25 → P&L: +₹3,375</span></div>
+      <div class="tl"><span class="tt">10:15:34</span><span class="tp tinfo">TOTAL</span><span class="tm">Day P&L: +₹7,240 (+2.8%) ✓</span></div>
+      <div class="tl"><span class="tt">10:15:35</span><span class="tp tinfo">WAIT</span><span class="tm">Scanning next entry... <span class="blink">█</span></span></div>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="pricing">
+  <div class="sec-tag">Pricing</div>
+  <h2>Simple, Transparent Plans</h2>
+  <div class="price-cards">
+    <div class="pc">
+      <div class="pname">Starter</div>
+      <div class="price"><sup>₹</sup>2,999</div>
+      <div class="pcycle">per month + GST</div>
+      <ul class="feats">
+        <li>1 Active Strategy</li>
+        <li>Angel One + Zerodha Support</li>
+        <li>Up to ₹5 Lakh Capital</li>
+        <li>Basic Dashboard</li>
+        <li>Email Support (48hr)</li>
+        <li>Paper Trading Mode</li>
+        <li>EOD Trade Reports</li>
+      </ul>
+      <button class="pbtn">Get Started →</button>
+    </div>
+    <div class="pc hot">
+      <div class="hot-tag">MOST POPULAR</div>
+      <div class="pname">Pro</div>
+      <div class="price"><sup>₹</sup>5,999</div>
+      <div class="pcycle">per month + GST</div>
+      <ul class="feats">
+        <li>3 Active Strategies</li>
+        <li>All 12+ Brokers Supported</li>
+        <li>Up to ₹25 Lakh Capital</li>
+        <li>Advanced Dashboard + Analytics</li>
+        <li>Priority Support (4hr)</li>
+        <li>Live Trade Notifications</li>
+        <li>Custom Risk Parameters</li>
+        <li>Strategy Backtesting</li>
+      </ul>
+      <button class="pbtn">Get Started →</button>
+    </div>
+    <div class="pc">
+      <div class="pname">Elite</div>
+      <div class="price"><sup>₹</sup>9,999</div>
+      <div class="pcycle">per month + GST</div>
+      <ul class="feats">
+        <li>All Strategies Unlimited</li>
+        <li>All Brokers + Multi-Account</li>
+        <li>Unlimited Capital</li>
+        <li>White-Label Dashboard</li>
+        <li>Dedicated Account Manager</li>
+        <li>Custom Strategy Deployment</li>
+        <li>API Access</li>
+        <li>Sub-broker Commission</li>
+      </ul>
+      <button class="pbtn">Get Started →</button>
+    </div>
+  </div>
+  <p style="text-align:center;font-size:12px;color:#556677;margin-top:16px">7-day free trial · No credit card needed · Cancel anytime</p>
+</div>
+
+<div class="sec dark">
+  <div class="sec-tag">Integrations</div>
+  <h2>Works With Your Broker</h2>
+  <div class="brokers">
+    <div class="brok">Angel One</div>
+    <div class="brok">Zerodha</div>
+    <div class="brok">Upstox</div>
+    <div class="brok">Fyers</div>
+    <div class="brok">Dhan</div>
+    <div class="brok">5Paisa</div>
+    <div class="brok">ICICI Direct</div>
+    <div class="brok">Kotak Neo</div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-tag">Results</div>
+  <h2>Traders Who Let Algo Do It</h2>
+  <div class="testi">
+    <div class="tc"><div class="tq">"I was spending 6 hours daily watching charts. AlgoX runs 3 strategies and I just check my dashboard once in the evening."</div><div class="ta"><div class="av">RK</div><div><div class="an">Rahul K.</div><div class="am">IT Professional, Pune · Pro Plan</div></div></div><div class="tres">Achieved <span>+41.2%</span> returns in 8 months on Nifty Momentum strategy</div></div>
+    <div class="tc"><div class="tq">"BankNifty Shield is remarkably consistent. It's like getting a salary from the market every single week."</div><div class="ta"><div class="av">SP</div><div><div class="an">Shreya P.</div><div class="am">CA, Mumbai · Elite Plan</div></div></div><div class="tres">Running <span>₹18 Lakh</span> portfolio with <span>+3.4%</span> avg monthly returns</div></div>
+    <div class="tc"><div class="tq">"As a sub-broker I offer algo to my clients. AlgoX Elite white-label helped me grow 3x in 4 months."</div><div class="ta"><div class="av">AM</div><div><div class="an">Amit M.</div><div class="am">Sub-Broker, Delhi · Elite Plan</div></div></div><div class="tres">Managing <span>47 client accounts</span> — earning <span>₹2.1L/month</span> commission</div></div>
+  </div>
+</div>
+
+<div class="sec dark">
+  <div class="sec-tag">Trust & Safety</div>
+  <h2>Your Money. Your Control.</h2>
+  <div class="sec-grid">
+    <div class="sg"><div class="sgi">🔐</div><div class="sgt">Read-Only API</div><div class="sgd">We cannot withdraw funds or transfer shares. Ever.</div></div>
+    <div class="sg"><div class="sgi">🛡️</div><div class="sgt">256-bit Encryption</div><div class="sgd">Bank-grade AES-256 encryption for all your data.</div></div>
+    <div class="sg"><div class="sgi">⚡</div><div class="sgt">Kill Switch</div><div class="sgd">One tap pauses all strategies instantly. Always in your control.</div></div>
+    <div class="sg"><div class="sgi">📊</div><div class="sgt">SEBI Compliant</div><div class="sgd">Operating under Research Analyst framework. Full transparency.</div></div>
+  </div>
+</div>
+
+<div class="sec" id="faq">
+  <div class="sec-tag">FAQ</div>
+  <h2>Got Questions?</h2>
+  <div class="faq-list">
+    <div class="fi"><div class="fq">Is my money safe with AlgoX?<div class="ft">+</div></div><div class="fa">Your funds never leave your demat account. AlgoX only has trade execution permissions — we cannot transfer, withdraw, or touch your capital in any way. You can revoke API access anytime from your broker's app.</div></div>
+    <div class="fi"><div class="fq">What is the minimum capital?<div class="ft">+</div></div><div class="fa">You can start with as low as ₹50,000 for the Starter plan. For options strategies like Iron Condor, we recommend ₹2-5 Lakh for meaningful results.</div></div>
+    <div class="fi"><div class="fq">Are the returns guaranteed?<div class="ft">+</div></div><div class="fa">No. Trading always involves risk and past performance does not guarantee future returns. The figures shown are backtested historical data. Only invest what you can afford to risk.</div></div>
+    <div class="fi"><div class="fq">Do I need to stay online?<div class="ft">+</div></div><div class="fa">No! That's the entire point of AlgoX. Our servers run 24/7, execute trades during market hours, manage your positions, and send you EOD reports. You can be completely offline.</div></div>
+    <div class="fi"><div class="fq">Which brokers are supported?<div class="ft">+</div></div><div class="fa">Angel One, Zerodha (Kite), Upstox, Fyers, Dhan, 5Paisa, ICICI Direct, and Kotak Neo. We're adding more brokers every month.</div></div>
+    <div class="fi"><div class="fq">Can I stop the algo anytime?<div class="ft">+</div></div><div class="fa">Yes! Use the instant kill switch from your dashboard. It immediately stops all new orders and can square off all open positions. You're always in full control.</div></div>
+  </div>
+</div>
+
+<div class="cta-sec">
+  <h2>Start Automating<br><span style="color:#00e5a0">Your Trades Today.</span></h2>
+  <p>Join 2,400+ traders who've stopped guessing and started letting algorithms do the work. 7-day free trial. No card needed.</p>
+  <div class="hbtns">
+    <button class="btn-g" style="font-size:15px;padding:16px 32px">Start Free Trial →</button>
+    <button class="btn-w" style="font-size:15px;padding:16px 32px">Book a Demo</button>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-logo">Algo<span>X</span></div>
+  <p class="foot-p">Institutional-grade algorithmic trading for every Indian investor. Automated. Transparent. Profitable.</p>
+  <div class="foot-links">
+    <a href="#">How It Works</a>
+    <a href="#">Strategies</a>
+    <a href="#">Pricing</a>
+    <a href="#">Contact</a>
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms</a>
+    <a href="#">Risk Disclosure</a>
+  </div>
+  <div class="foot-disc">© 2025 AlgoX Technologies Pvt. Ltd. All rights reserved.<br>Risk Disclosure: Algorithmic trading involves substantial risk of loss. Past performance is not indicative of future results. Please read all risk disclosures before investing. AlgoX is not a SEBI-registered investment advisor. Trade at your own risk.</div>
+</footer>
+
+<script>
+document.querySelectorAll('.fq').forEach(function(q){
+  q.addEventListener('click',function(){
+    var item=q.parentElement;
+    var was=item.classList.contains('open');
+    document.querySelectorAll('.fi').forEach(function(i){i.classList.remove('open')});
+    document.querySelectorAll('.ft').forEach(function(t){t.textContent='+'});
+    if(!was){item.classList.add('open');q.querySelector('.ft').textContent='−'}
+  });
+});
+var lines=[
+  {t:'11:02:14',tp:'SIGNAL',c:'tinfo',m:'NIFTY re-entry signal detected'},
+  {t:'11:02:15',tp:'BUY',c:'tbuy',m:'NIFTY22400CE → 2 lots @ ₹98.75'},
+  {t:'11:14:28',tp:'UPDATE',c:'tinfo',m:'Position MTM: +₹2,650'},
+  {t:'11:31:07',tp:'EXIT',c:'tsell',m:'1 lot closed @ ₹124 → +₹2,525'},
+  {t:'12:15:00',tp:'TOTAL',c:'tinfo',m:'Day P&L: +₹14,820 (+5.9%) ✓'},
+];
+var i=0;
+setInterval(function(){
+  if(i>=lines.length)return;
+  var term=document.getElementById('terminal');
+  var l=lines[i];
+  var last=term.lastElementChild;
+  if(last&&last.textContent.indexOf('█')>-1)term.removeChild(last);
+  var d=document.createElement('div');
+  d.className='tl';
+  d.innerHTML='<span class="tt">'+l.t+'</span><span class="tp '+l.c+'">'+l.tp+'</span><span class="tm">'+l.m+'</span>';
+  term.appendChild(d);
+  var b=document.createElement('div');
+  b.className='tl';
+  b.innerHTML='<span class="tt">'+l.t+'</span><span class="tp tinfo">WAIT</span><span class="tm">Scanning next entry... <span class="blink">█</span></span>';
+  term.appendChild(b);
+  term.scrollTop=term.scrollHeight;
+  i++;
+},3500);
+</script>
+</body>
+</html>
